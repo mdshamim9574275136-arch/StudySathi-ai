@@ -23,12 +23,12 @@ import {
   Baby
 } from 'lucide-react';
 import Header from './Header';
-import { SubjectBar } from './components/SubjectBar';
-import { MessageBubble } from './components/MessageBubble';
-import { SuggestedQuestions } from './components/SuggestedQuestions';
-import { QuizModal } from './components/QuizModal';
-import { PrivacyModal } from './components/PrivacyModal';
-import { Message, MessageImage, SubjectItem, ExplanationMode } from './types';
+import { SubjectBar } from './SubjectBar';
+import { MessageBubble } from './MessageBubble';
+import { SuggestedQuestions } from './SuggestedQuestions';
+import { QuizModal } from './QuizModal';
+import { PrivacyModal } from './PrivacyModal';
+
 
 // Default fallback subjects
 const DEFAULT_SUBJECTS: SubjectItem[] = [
