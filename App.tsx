@@ -22,7 +22,7 @@ import {
   Lightbulb,
   Baby
 } from 'lucide-react';
-import { Header } from './components/Header';
+import Header from './Header';
 import { SubjectBar } from './components/SubjectBar';
 import { MessageBubble } from './components/MessageBubble';
 import { SuggestedQuestions } from './components/SuggestedQuestions';
