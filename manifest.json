@@ -1,0 +1,39 @@
+{
+  "name": "StudySaathi AI",
+  "short_name": "StudySaathi",
+  "description": "Mobile-first educational AI study companion for students across Maths, Science, English, Social Science, and Coding with step-by-step guidance in Hindi & English.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "books", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Maths Helper",
+      "short_name": "Maths",
+      "description": "Step-by-step mathematics solver",
+      "url": "/?subject=maths"
+    },
+    {
+      "name": "Quick Quiz",
+      "short_name": "Quiz",
+      "description": "Practice multiple choice quiz",
+      "url": "/?mode=quiz"
+    }
+  ]
+}

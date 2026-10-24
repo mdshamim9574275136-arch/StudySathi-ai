@@ -1,0 +1,6 @@
+{
+  "name": "StudySaathi AI",
+  "description": "Mobile-first educational AI study companion by Shaikh Sahewaz. Step-by-step learning for Maths, Science, English & Coding with WhatsApp sharing, homework camera, and multilingual support in Hindi, English & Indian regional languages.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
