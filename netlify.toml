@@ -10,4 +10,4 @@
   from = "/api/chat"
   to = "/.netlify/functions/chat"
   status = 200
-  
+  # Trigger fresh deployment
