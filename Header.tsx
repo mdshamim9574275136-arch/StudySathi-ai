@@ -9,7 +9,7 @@ import {
   Check, 
   ChevronDown 
 } from 'lucide-react';
-import { SUPPORTED_LANGUAGES, LanguageOption } from '../types';
+import { SUPPORTED_LANGUAGES } from './types.ts';
 
 interface HeaderProps {
   onNewChat: () => void;
