@@ -13,7 +13,7 @@ export default async (req) => {
   }
   try {
     const body = await req.json();
-    const question = String(body.question || "").trim();
+    const question = String(body.message || body.question || "").trim();
     if (!question || question.length > 4000) {
       return new Response(JSON.stringify({ error: "Please enter a question (maximum 4000 characters)." }), { status: 400, headers });
     }
@@ -52,7 +52,7 @@ export default async (req) => {
     }
     const answer = (data.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("\n").trim();
     if (!answer) return new Response(JSON.stringify({ error: "AI returned an empty answer. Please try asking another way." }), { status: 502, headers });
-    return new Response(JSON.stringify({ answer }), { status: 200, headers });
+    return new Response(JSON.stringify({ reply: answer, timestamp: new Date().toISOString() }), { status: 200, headers });
   } catch (err) {
     console.error("Chat function error", err);
     return new Response(JSON.stringify({ error: "Could not connect to the AI service. Please check your internet and try again." }), { status: 500, headers });
