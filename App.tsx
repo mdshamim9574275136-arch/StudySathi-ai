@@ -472,6 +472,34 @@ export default function App() {
         onToggleSimpleMode={handleToggleSimpleMode}
       />
 
+      {/* Premium StudySaathi dashboard hero */}
+      <section className="ss-dashboard-hero mx-auto w-full max-w-6xl px-3 sm:px-5 pt-4 pb-3">
+        <div className="ss-hero-card">
+          <div className="ss-hero-copy">
+            <div className="ss-eyebrow"><span className="ss-live-dot" /> HELLO, LEARNER</div>
+            <h1>Your Study Partner<br /><span>in Every Step.</span></h1>
+            <p>AI-powered learning for better understanding, higher scores and a brighter future.</p>
+            <div className="ss-feature-pills">
+              <span>✦ AI Chat · 24/7</span><span>◉ AI Teachers</span><span>▣ Homework Help</span><span>文 Multi-language</span>
+            </div>
+          </div>
+          <div className="ss-hero-art" aria-hidden="true">
+            <div className="ss-orbit ss-orbit-one" /><div className="ss-orbit ss-orbit-two" />
+            <div className="ss-student-emoji">🧑🏻‍💻</div>
+            <div className="ss-floating-note">Dream · Learn · Achieve</div>
+            <div className="ss-books"><i /><i /><i /></div>
+          </div>
+          <div className="ss-hero-foot">SMART LEARNING <b>•</b> AI POWERED <b>•</b> FOR EVERY STUDENT</div>
+        </div>
+        <div className="ss-shortcuts">
+          <div><span>💬</span><strong>AI Chat</strong><small>Ask anything, anytime</small></div>
+          <div><span>👩🏻‍🏫</span><strong>AI Teachers</strong><small>Subject-wise guidance</small></div>
+          <div><span>📸</span><strong>Homework Help</strong><small>Scan and solve</small></div>
+          <div><span>🌐</span><strong>Languages</strong><small>Learn your way</small></div>
+          <div><span>🏆</span><strong>Exam Coach</strong><small>Plan · Practise · Score</small></div>
+        </div>
+      </section>
+
       {/* Subject & Tutor Mode Bar */}
       <SubjectBar
         subjects={subjects}
