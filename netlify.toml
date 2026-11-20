@@ -6,8 +6,14 @@
 
 [functions]
   node_bundler = "esbuild"
+
 [[redirects]]
   from = "/api/chat"
   to = "/.netlify/functions/chat"
   status = 200
-  # Trigger fresh deployment
+
+[[redirects]]
+  from = "/api/quiz-generate"
+  to = "/.netlify/functions/quiz-generate"
+  status = 200
+  
