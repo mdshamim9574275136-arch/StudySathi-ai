@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 160" role="img" aria-label="Friendly cartoon teacher portrait">
+<defs><linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0f9f80"/><stop offset="1" stop-color="#172554"/></linearGradient><radialGradient id="bg"><stop stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#dff8ee"/></radialGradient></defs>
+<circle cx="70" cy="74" r="69" fill="url(#bg)"/>
+<circle cx="70" cy="68" r="49" fill="#fff" opacity=".28"/>
+<path d="M15 160 Q18 119 46 112 L94 112 Q122 120 125 160Z" fill="url(#shirt)"/>
+<path d="M58 105 L70 125 L82 105" fill="#fff" opacity=".9"/>
+<path d="M56 100 L56 119 Q70 132 84 119 L84 99Z" fill="#a9684d"/>
+<path d="M28 72 Q20 22 62 16 Q105 12 111 62 L108 112 Q99 127 91 105 L34 109 Q21 99 28 72Z" fill="#25202a"/>
+<ellipse cx="70" cy="69" rx="36" ry="43" fill="#a9684d"/>
+<path d="M36 68 Q37 37 62 31 Q91 27 104 54 L101 42 Q91 19 66 21 Q36 24 30 54Z" fill="#25202a"/>
+<path d="M30 59 Q37 24 71 26 Q93 24 106 52 Q87 43 76 45 Q52 52 31 70Z" fill="#25202a"/>
+<path d="M48 62 Q56 57 63 62 M78 62 Q86 57 93 62" stroke="#25202a" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+<ellipse cx="56" cy="73" rx="3.3" ry="4" fill="#26364d"/><ellipse cx="84" cy="73" rx="3.3" ry="4" fill="#26364d"/>
+
+<path d="M69 76 L66 88 Q70 91 74 88" fill="none" stroke="#9c5946" stroke-width="2.2" stroke-linecap="round"/>
+<path d="M57 96 Q70 108 84 96" fill="none" stroke="#8f3e43" stroke-width="3" stroke-linecap="round"/>
+<circle cx="39" cy="84" r="5" fill="#e98f82" opacity=".5"/><circle cx="101" cy="84" r="5" fill="#e98f82" opacity=".5"/>
+<path d="M23 151 Q31 130 50 127 L70 143 L90 127 Q109 131 117 151" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="3"/>
+<rect x="92" y="119" width="25" height="28" rx="5" fill="#f5d36d" stroke="#fff" stroke-width="2"/><path d="M98 127h13M98 133h13M98 139h9" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+</svg>

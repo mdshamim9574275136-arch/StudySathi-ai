@@ -11,7 +11,7 @@ import {
   Camera,
   Share2
 } from 'lucide-react';
-import { SubjectItem } from '../types';
+import type { SubjectItem } from './types';
 
 interface SuggestedQuestionsProps {
   subjects: SubjectItem[];

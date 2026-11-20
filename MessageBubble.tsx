@@ -12,11 +12,13 @@ import {
   X
 } from 'lucide-react';
 import { marked } from 'marked';
-import { Message } from '../types';
+import type { Message } from './types';
 
 interface MessageBubbleProps {
   message: Message;
   onGenerateQuizFromTopic?: (topic: string) => void;
+  teacherAvatar?: string;
+  teacherName?: string;
 }
 
 // Configure marked options
@@ -28,6 +30,8 @@ marked.setOptions({
 export const MessageBubble: React.FC<MessageBubbleProps> = ({
   message,
   onGenerateQuizFromTopic,
+  teacherAvatar,
+  teacherName,
 }) => {
   const [copied, setCopied] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -160,8 +164,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       <div className={`flex w-full gap-2 sm:gap-3 my-3.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
         {/* Avatar for AI: Stylized SS logo badge */}
         {!isUser && (
-          <div className="shrink-0 w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-700 via-purple-700 to-indigo-900 flex items-center justify-center text-white shadow-xs mt-0.5 border border-indigo-300/40">
-            <span className="font-black text-[11px] tracking-tight">SS</span>
+          <div className="shrink-0 w-9 h-9 rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-400 to-purple-700 shadow-sm mt-0.5 border border-white/20">
+            {teacherAvatar ? <img src={teacherAvatar} alt="Selected AI teacher" className="w-full h-full object-cover" /> : <span className="w-full h-full flex items-center justify-center text-white font-black text-[11px]">SS</span>}
           </div>
         )}
 
@@ -178,7 +182,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             <div className="flex items-center justify-between pb-1.5 mb-2.5 border-b border-indigo-50 text-[11px] font-semibold text-indigo-700">
               <span className="flex items-center gap-1.5">
                 <Sparkles className="w-3 h-3 text-amber-500" />
-                <span>StudySaathi Tutor</span>
+                <span>{teacherName || 'StudySaathi Tutor'}</span>
                 <span className="text-slate-400 font-normal text-[10px] hidden xs:inline">• by Shaikh Sahewaz</span>
               </span>
               <span className="text-slate-400 font-normal text-[10px]">

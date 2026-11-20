@@ -28,6 +28,7 @@ import { MessageBubble } from './MessageBubble';
 import { SuggestedQuestions } from './SuggestedQuestions';
 import { QuizModal } from './QuizModal';
 import { PrivacyModal } from './PrivacyModal';
+import type { Message, MessageImage, SubjectItem, ExplanationMode } from './types';
 
 
 // Default fallback subjects
@@ -113,14 +114,21 @@ const DEFAULT_SUBJECTS: SubjectItem[] = [
 ];
 
 export default function App() {
-  const [messages, setMessages] = useState<Message[]>(() => {
+  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(() => {
+    try { return sessionStorage.getItem('studysaathi_active_teacher') || null; } catch { return null; }
+  });
+  const [chatSessions, setChatSessions] = useState<Record<string, Message[]>>(() => {
     try {
-      const saved = sessionStorage.getItem('studysaathi_chat_session');
-      return saved ? JSON.parse(saved) : [];
+      const savedSessions = sessionStorage.getItem('studysaathi_chat_sessions');
+      if (savedSessions) return JSON.parse(savedSessions);
+      const legacy = sessionStorage.getItem('studysaathi_chat_session');
+      return { general: legacy ? JSON.parse(legacy) : [] };
     } catch {
-      return [];
+      return { general: [] };
     }
   });
+  const chatKey = selectedTeacherId || 'general';
+  const messages = chatSessions[chatKey] || [];
 
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -129,8 +137,7 @@ export default function App() {
 
   // Subject and Mode state
   const [subjects, setSubjects] = useState<SubjectItem[]>(DEFAULT_SUBJECTS);
-  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
-  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null);
+  const [selectedSubject, setSelectedSubject] = useState<string | null>(() => selectedTeacherId);
   const [selectedMode, setSelectedMode] = useState<ExplanationMode>('normal');
 
   // Homework Photo State
@@ -170,14 +177,15 @@ export default function App() {
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
 
-  // Save session messages to sessionStorage
+  // Keep each teacher's conversation separate in this browser session.
   useEffect(() => {
     try {
-      sessionStorage.setItem('studysaathi_chat_session', JSON.stringify(messages));
+      sessionStorage.setItem('studysaathi_chat_sessions', JSON.stringify(chatSessions));
+      sessionStorage.setItem('studysaathi_active_teacher', selectedTeacherId || '');
     } catch {
-      // Ignore sessionStorage errors
+      // Ignore sessionStorage errors.
     }
-  }, [messages]);
+  }, [chatSessions, selectedTeacherId]);
 
   // Save language preference
   const handleSelectLanguage = (langCode: string) => {
@@ -333,6 +341,8 @@ export default function App() {
   const handleSendMessage = async (customMessage?: string) => {
     const textToSend = (customMessage !== undefined ? customMessage : input).trim();
     const imageToSend = attachedImage;
+    const activeChatKey = selectedTeacherId || 'general';
+    const activeMessages = chatSessions[activeChatKey] || [];
 
     // Must have either text or image
     if (!textToSend && !imageToSend) return;
@@ -359,13 +369,12 @@ export default function App() {
       simpleMode,
     };
 
-    const updatedMessages = [...messages, userMessage];
-    setMessages(updatedMessages);
+    setChatSessions((prev) => ({ ...prev, [activeChatKey]: [...(prev[activeChatKey] || []), userMessage] }));
     setIsLoading(true);
 
     try {
       // Build safe conversation history (last 8 messages)
-      const historyPayload = messages.slice(-8).map((m) => ({
+      const historyPayload = activeMessages.slice(-8).map((m) => ({
         role: m.role,
         text: m.text,
       }));
@@ -377,11 +386,12 @@ export default function App() {
           message: textToSend,
           image: imageToSend || undefined,
           history: historyPayload,
-          subject: selectedSubject,
+          subject: subjects.find((item) => item.id === selectedSubject)?.name || selectedSubject || 'General study help',
           mode: selectedMode,
           language: selectedLanguage,
           simpleMode,
-          teacherRole: selectedTeacherId ? ({ maths: 'patient mathematics teacher who explains calculations step by step', science: 'friendly science teacher who explains physics, chemistry and biology with practical examples', english: 'supportive English and grammar teacher who gives clear examples and corrects gently', social: 'engaging social science teacher who explains history, geography and civics in simple terms', coding: 'experienced computer science and coding teacher who explains code step by step', exam_prep: 'encouraging exam preparation coach who focuses on revision and exam-ready answers' } as Record<string, string>)[selectedTeacherId] : undefined,
+          teacher: selectedTeacherId ? ({ maths: 'Arjun Sir', science: 'Meera Ma’am', english: 'Anaya Ma’am', social: 'Kabir Sir', coding: 'Dev Sir', exam_prep: 'Tara Ma’am' } as Record<string, string>)[selectedTeacherId] : 'StudySaathi AI',
+          teacherRole: selectedTeacherId ? ({ maths: 'patient mathematics teacher who explains calculations step by step', science: 'friendly science teacher who explains physics, chemistry and biology with practical examples', english: 'supportive English and grammar teacher who gives clear examples and corrects gently', social: 'engaging social science teacher who explains history, geography and civics in simple terms', coding: 'experienced computer science and coding teacher who explains code step by step', exam_prep: 'encouraging exam preparation coach who focuses on revision and exam-ready answers' } as Record<string, string>)[selectedTeacherId] : 'friendly all-subject study companion',
         }),
       });
 
@@ -399,7 +409,7 @@ export default function App() {
         subject: selectedSubject || undefined,
       };
 
-      setMessages((prev) => [...prev, modelMessage]);
+      setChatSessions((prev) => ({ ...prev, [activeChatKey]: [...(prev[activeChatKey] || []), modelMessage] }));
     } catch (err: any) {
       setError(err?.message || 'Something went wrong. Please check your connection or try again.');
     } finally {
@@ -420,7 +430,7 @@ export default function App() {
   };
 
   const confirmClearChat = () => {
-    setMessages([]);
+    setChatSessions((prev) => ({ ...prev, [chatKey]: [] }));
     setError(null);
     setInput('');
     setAttachedImage(null);
@@ -531,6 +541,8 @@ export default function App() {
               <MessageBubble
                 key={msg.id}
                 message={msg}
+                teacherAvatar={selectedTeacherId ? `/teacher-avatars/${selectedTeacherId}.svg` : undefined}
+                teacherName={selectedTeacherId ? ({ maths: 'Arjun Sir', science: 'Meera Ma’am', english: 'Anaya Ma’am', social: 'Kabir Sir', coding: 'Dev Sir', exam_prep: 'Tara Ma’am' } as Record<string, string>)[selectedTeacherId] : undefined}
                 onGenerateQuizFromTopic={handleOpenQuizWithTopic}
               />
             ))}

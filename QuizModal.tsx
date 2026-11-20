@@ -12,7 +12,7 @@ import {
   Loader2
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { QuizQuestion } from '../types';
+import type { QuizQuestion } from './types';
 
 interface QuizModalProps {
   isOpen: boolean;
