@@ -173,6 +173,8 @@ export default function App() {
 
   // DOM Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatWindowRef = useRef<HTMLElement | null>(null);
+  const previousTeacherRef = useRef<string | null>(selectedTeacherId);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
@@ -231,6 +233,14 @@ export default function App() {
 
     fetchHealthAndSubjects();
   }, []);
+
+  // When a teacher is selected, bring that teacher's private chat into view.
+  useEffect(() => {
+    if (previousTeacherRef.current !== selectedTeacherId) {
+      previousTeacherRef.current = selectedTeacherId;
+      chatWindowRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [selectedTeacherId]);
 
   // Auto-scroll on new message
   useEffect(() => {
@@ -525,7 +535,17 @@ export default function App() {
       />
 
       {/* Main Chat Scrollable Container */}
-      <main className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 max-w-4xl w-full mx-auto space-y-4">
+      <main id="chat-window" ref={chatWindowRef} className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 max-w-4xl w-full mx-auto space-y-4 scroll-mt-4">
+        {selectedTeacherId && (
+          <div className="ss-active-teacher-banner">
+            <span className="ss-active-teacher-avatar"><img src={`/teacher-avatars/${selectedTeacherId}.svg`} alt="" /></span>
+            <div>
+              <strong>{({ maths: 'Arjun Sir', science: 'Meera Ma’am', english: 'Anaya Ma’am', social: 'Kabir Sir', coding: 'Dev Sir', exam_prep: 'Tara Ma’am' } as Record<string, string>)[selectedTeacherId]}</strong>
+              <small>Private teacher chat · Ask your question below</small>
+            </div>
+            <span className="ss-chat-live">● ONLINE</span>
+          </div>
+        )}
         {messages.length === 0 ? (
           <SuggestedQuestions
             subjects={subjects}

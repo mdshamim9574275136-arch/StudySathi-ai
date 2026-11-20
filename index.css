@@ -348,3 +348,75 @@ button:active { transform:scale(.98); }
 .ss-general-chat { padding:7px 10px; border-radius:999px; background:rgba(119,104,255,.18); border:1px solid rgba(153,140,255,.36); color:#ddd9ff; font-size:8px; font-weight:900; white-space:nowrap; }
 .ss-general-chat:hover { background:rgba(119,104,255,.3); }
 @media(max-width:480px) { .ss-heading-actions { align-items:flex-end; flex-direction:column; } .ss-general-chat { padding:6px 8px; } }
+
+/* Mobile readability and teacher avatar delivery fixes */
+.ss-teacher-section { color:#f8fbff; }
+.ss-section-kicker { font-size:11px; }
+.ss-section-heading p { font-size:13px; color:#d3e2f7; }
+.ss-teacher-count { font-size:10px; }
+.ss-teacher-card { min-height:116px; }
+.ss-teacher-art { flex-basis:96px; width:96px; height:104px; }
+.ss-teacher-art img { display:block; width:100%; height:100%; object-fit:contain; }
+.ss-teacher-online { font-size:8px; }
+.ss-teacher-info strong { font-size:14px; }
+.ss-teacher-info small { font-size:11px; color:#d0e3fb; }
+.ss-teacher-info em { font-size:10px; color:#bed2ed; }
+.ss-open-chat { font-size:10px; padding:7px 10px; }
+.ss-subject-pills button,.ss-tutor-modes button { font-size:10px; }
+.ss-tutor-modes > span { font-size:10px; }
+.ss-active-teacher-banner { display:flex; align-items:center; gap:12px; padding:11px 13px; border-radius:16px; border:1px solid rgba(82,224,225,.38); background:linear-gradient(110deg,rgba(18,75,104,.96),rgba(41,48,111,.96)); color:#fff; box-shadow:0 8px 22px rgba(0,0,0,.16); }
+.ss-active-teacher-avatar { width:48px; height:48px; flex:0 0 48px; border-radius:13px; overflow:hidden; background:linear-gradient(135deg,#4fd1d8,#8175ff); }
+.ss-active-teacher-avatar img { width:100%; height:100%; object-fit:contain; }
+.ss-active-teacher-banner div { min-width:0; display:flex; flex-direction:column; gap:3px; }
+.ss-active-teacher-banner strong { color:#fff; font-size:14px; font-weight:900; }
+.ss-active-teacher-banner small { color:#d6e8ff; font-size:11px; }
+.ss-chat-live { margin-left:auto; flex-shrink:0; color:#9af7d2; font-size:9px; font-weight:900; }
+@media(max-width:760px) {
+ .ss-teacher-card { min-height:112px; gap:9px; padding:9px; }
+ .ss-teacher-art { flex-basis:82px; width:82px; height:94px; }
+ .ss-teacher-info strong { font-size:12px; }
+ .ss-teacher-info small { font-size:10px; }
+ .ss-teacher-info em { display:block; font-size:9px; }
+ .ss-open-chat { font-size:9px; padding:6px 8px; }
+}
+@media(max-width:390px) {
+ .ss-teacher-grid { grid-template-columns:1fr; }
+ .ss-teacher-card { min-height:104px; }
+ .ss-teacher-art { flex-basis:86px; width:86px; height:94px; }
+}
+
+/* Mobile readability and teacher avatar delivery fixes */
+.ss-teacher-section { color:#f8fbff; }
+.ss-section-kicker { font-size:11px; }
+.ss-section-heading p { font-size:13px; color:#d3e2f7; }
+.ss-teacher-count { font-size:10px; }
+.ss-teacher-card { min-height:116px; }
+.ss-teacher-art { flex-basis:96px; width:96px; height:104px; }
+.ss-teacher-art img { display:block; width:100%; height:100%; object-fit:contain; }
+.ss-teacher-online { font-size:8px; }
+.ss-teacher-info strong { font-size:14px; }
+.ss-teacher-info small { font-size:11px; color:#d0e3fb; }
+.ss-teacher-info em { font-size:10px; color:#bed2ed; }
+.ss-open-chat { font-size:10px; padding:7px 10px; }
+.ss-subject-pills button,.ss-tutor-modes button { font-size:10px; }
+.ss-tutor-modes > span { font-size:10px; }
+.ss-active-teacher-banner { display:flex; align-items:center; gap:12px; padding:11px 13px; border-radius:16px; border:1px solid rgba(82,224,225,.38); background:linear-gradient(110deg,rgba(18,75,104,.96),rgba(41,48,111,.96)); color:#fff; box-shadow:0 8px 22px rgba(0,0,0,.16); }
+.ss-active-teacher-avatar { width:48px; height:48px; flex:0 0 48px; border-radius:13px; overflow:hidden; background:linear-gradient(135deg,#4fd1d8,#8175ff); }
+.ss-active-teacher-avatar img { width:100%; height:100%; object-fit:contain; }
+.ss-active-teacher-banner div { min-width:0; display:flex; flex-direction:column; gap:3px; }
+.ss-active-teacher-banner strong { color:#fff; font-size:14px; font-weight:900; }
+.ss-active-teacher-banner small { color:#d6e8ff; font-size:11px; }
+.ss-chat-live { margin-left:auto; flex-shrink:0; color:#9af7d2; font-size:9px; font-weight:900; }
+@media(max-width:760px) {
+ .ss-teacher-card { min-height:112px; gap:9px; padding:9px; }
+ .ss-teacher-art { flex-basis:82px; width:82px; height:94px; }
+ .ss-teacher-info strong { font-size:12px; }
+ .ss-teacher-info small { font-size:10px; }
+ .ss-teacher-info em { display:block; font-size:9px; }
+ .ss-open-chat { font-size:9px; padding:6px 8px; }
+}
+@media(max-width:390px) {
+ .ss-teacher-grid { grid-template-columns:1fr; }
+ .ss-teacher-card { min-height:104px; }
+ .ss-teacher-art { flex-basis:86px; width:86px; height:94px; }
+}
