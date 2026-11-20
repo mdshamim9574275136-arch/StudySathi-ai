@@ -44,27 +44,16 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Brand identity: Premium SS + AI Monogram & Shaikh Sahewaz Credit */}
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           {/* Stylized SS + AI Monogram Badge */}
-          <div className="relative shrink-0 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-indigo-700 via-purple-700 to-indigo-950 text-white shadow-md shadow-indigo-500/25 border border-indigo-400/30">
-            <div className="flex items-baseline font-black tracking-tighter text-sm sm:text-base select-none">
-              <span className="text-white drop-shadow-xs">S</span>
-              <span className="text-indigo-200 -ml-0.5 drop-shadow-xs">S</span>
-            </div>
-            
-            {/* Small Glowing AI pill */}
-            <span className="absolute -bottom-1 -right-1 px-1 py-0.2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-[9px] font-extrabold text-white shadow-xs border border-white/80 flex items-center gap-0.5">
-              AI
-            </span>
-
-            {/* Live Server Indicator Ping */}
-            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${serverReady ? 'bg-emerald-400 opacity-75' : 'bg-amber-400 opacity-75'}`}></span>
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${serverReady ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
-            </span>
+          <div className="ss-brand-mark relative shrink-0 flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-2xl text-indigo-600 border border-indigo-100 shadow-sm">
+            <span className="ss-brand-orbit" />
+            <Sparkles className="relative z-10 w-6 h-6" strokeWidth={2.3} />
+            <span className="absolute -bottom-1 -right-1 px-1.5 py-0.5 rounded-full bg-indigo-600 text-[8px] font-black text-white shadow-sm border-2 border-white">AI</span>
+            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5"><span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${serverReady ? 'bg-emerald-500' : 'bg-amber-500'}`} /></span>
           </div>
 
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <h1 className="text-base sm:text-lg font-black tracking-tight bg-gradient-to-r from-indigo-800 via-purple-800 to-indigo-950 bg-clip-text text-transparent truncate">
+              <h1 className="text-base sm:text-lg font-black tracking-tight text-slate-900 truncate">
                 StudySaathi AI
               </h1>
               <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-purple-50 text-purple-700 border border-purple-200/80 hidden xs:inline-flex items-center gap-0.5">

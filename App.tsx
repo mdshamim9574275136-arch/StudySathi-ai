@@ -114,21 +114,14 @@ const DEFAULT_SUBJECTS: SubjectItem[] = [
 ];
 
 export default function App() {
-  const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(() => {
-    try { return sessionStorage.getItem('studysaathi_active_teacher') || null; } catch { return null; }
-  });
-  const [chatSessions, setChatSessions] = useState<Record<string, Message[]>>(() => {
+  const [messages, setMessages] = useState<Message[]>(() => {
     try {
-      const savedSessions = sessionStorage.getItem('studysaathi_chat_sessions');
-      if (savedSessions) return JSON.parse(savedSessions);
-      const legacy = sessionStorage.getItem('studysaathi_chat_session');
-      return { general: legacy ? JSON.parse(legacy) : [] };
+      const saved = sessionStorage.getItem('studysaathi_chat_session');
+      return saved ? JSON.parse(saved) : [];
     } catch {
-      return { general: [] };
+      return [];
     }
   });
-  const chatKey = selectedTeacherId || 'general';
-  const messages = chatSessions[chatKey] || [];
 
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -137,7 +130,7 @@ export default function App() {
 
   // Subject and Mode state
   const [subjects, setSubjects] = useState<SubjectItem[]>(DEFAULT_SUBJECTS);
-  const [selectedSubject, setSelectedSubject] = useState<string | null>(() => selectedTeacherId);
+  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<ExplanationMode>('normal');
 
   // Homework Photo State
@@ -173,21 +166,18 @@ export default function App() {
 
   // DOM Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatWindowRef = useRef<HTMLElement | null>(null);
-  const previousTeacherRef = useRef<string | null>(selectedTeacherId);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
 
-  // Keep each teacher's conversation separate in this browser session.
+  // Save session messages to sessionStorage
   useEffect(() => {
     try {
-      sessionStorage.setItem('studysaathi_chat_sessions', JSON.stringify(chatSessions));
-      sessionStorage.setItem('studysaathi_active_teacher', selectedTeacherId || '');
+      sessionStorage.setItem('studysaathi_chat_session', JSON.stringify(messages));
     } catch {
-      // Ignore sessionStorage errors.
+      // Ignore sessionStorage errors
     }
-  }, [chatSessions, selectedTeacherId]);
+  }, [messages]);
 
   // Save language preference
   const handleSelectLanguage = (langCode: string) => {
@@ -233,14 +223,6 @@ export default function App() {
 
     fetchHealthAndSubjects();
   }, []);
-
-  // When a teacher is selected, bring that teacher's private chat into view.
-  useEffect(() => {
-    if (previousTeacherRef.current !== selectedTeacherId) {
-      previousTeacherRef.current = selectedTeacherId;
-      chatWindowRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [selectedTeacherId]);
 
   // Auto-scroll on new message
   useEffect(() => {
@@ -351,8 +333,6 @@ export default function App() {
   const handleSendMessage = async (customMessage?: string) => {
     const textToSend = (customMessage !== undefined ? customMessage : input).trim();
     const imageToSend = attachedImage;
-    const activeChatKey = selectedTeacherId || 'general';
-    const activeMessages = chatSessions[activeChatKey] || [];
 
     // Must have either text or image
     if (!textToSend && !imageToSend) return;
@@ -379,12 +359,13 @@ export default function App() {
       simpleMode,
     };
 
-    setChatSessions((prev) => ({ ...prev, [activeChatKey]: [...(prev[activeChatKey] || []), userMessage] }));
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setIsLoading(true);
 
     try {
       // Build safe conversation history (last 8 messages)
-      const historyPayload = activeMessages.slice(-8).map((m) => ({
+      const historyPayload = messages.slice(-8).map((m) => ({
         role: m.role,
         text: m.text,
       }));
@@ -396,12 +377,10 @@ export default function App() {
           message: textToSend,
           image: imageToSend || undefined,
           history: historyPayload,
-          subject: subjects.find((item) => item.id === selectedSubject)?.name || selectedSubject || 'General study help',
+          subject: selectedSubject,
           mode: selectedMode,
           language: selectedLanguage,
           simpleMode,
-          teacher: selectedTeacherId ? ({ maths: 'Arjun Sir', science: 'Meera Ma’am', english: 'Anaya Ma’am', social: 'Kabir Sir', coding: 'Dev Sir', exam_prep: 'Tara Ma’am' } as Record<string, string>)[selectedTeacherId] : 'StudySaathi AI',
-          teacherRole: selectedTeacherId ? ({ maths: 'patient mathematics teacher who explains calculations step by step', science: 'friendly science teacher who explains physics, chemistry and biology with practical examples', english: 'supportive English and grammar teacher who gives clear examples and corrects gently', social: 'engaging social science teacher who explains history, geography and civics in simple terms', coding: 'experienced computer science and coding teacher who explains code step by step', exam_prep: 'encouraging exam preparation coach who focuses on revision and exam-ready answers' } as Record<string, string>)[selectedTeacherId] : 'friendly all-subject study companion',
         }),
       });
 
@@ -419,7 +398,7 @@ export default function App() {
         subject: selectedSubject || undefined,
       };
 
-      setChatSessions((prev) => ({ ...prev, [activeChatKey]: [...(prev[activeChatKey] || []), modelMessage] }));
+      setMessages((prev) => [...prev, modelMessage]);
     } catch (err: any) {
       setError(err?.message || 'Something went wrong. Please check your connection or try again.');
     } finally {
@@ -440,7 +419,7 @@ export default function App() {
   };
 
   const confirmClearChat = () => {
-    setChatSessions((prev) => ({ ...prev, [chatKey]: [] }));
+    setMessages([]);
     setError(null);
     setInput('');
     setAttachedImage(null);
@@ -476,7 +455,7 @@ export default function App() {
         aria-hidden="true"
       />
 
-      {/* Sticky Top Header with SS + AI Logo, Shaikh Sahewaz Branding & Language Picker */}
+      {/* Sticky top header with futuristic StudySaathi AI identity */}
       <Header
         onNewChat={handleStartNewChat}
         onOpenQuiz={() => {
@@ -492,7 +471,7 @@ export default function App() {
         onToggleSimpleMode={handleToggleSimpleMode}
       />
 
-      {/* Premium StudySaathi dashboard hero */}
+      {/* Clean AI-only StudySaathi dashboard */}
       <section className="ss-dashboard-hero mx-auto w-full max-w-6xl px-3 sm:px-5 pt-4 pb-3">
         <div className="ss-hero-card">
           <div className="ss-hero-copy">
@@ -500,7 +479,7 @@ export default function App() {
             <h1>Your Study Partner<br /><span>in Every Step.</span></h1>
             <p>AI-powered learning for better understanding, higher scores and a brighter future.</p>
             <div className="ss-feature-pills">
-              <span>✦ AI Chat · 24/7</span><span>◉ AI Teachers</span><span>▣ Homework Help</span><span>文 Multi-language</span>
+              <span>✦ AI Chat · 24/7</span><span>▣ Homework Help</span><span>文 Multi-language</span><span>✧ Smart Learning</span>
             </div>
           </div>
           <div className="ss-hero-art" aria-hidden="true">
@@ -513,7 +492,7 @@ export default function App() {
         </div>
         <div className="ss-shortcuts">
           <div><span>💬</span><strong>AI Chat</strong><small>Ask anything, anytime</small></div>
-          <div><span>👩🏻‍🏫</span><strong>AI Teachers</strong><small>Subject-wise guidance</small></div>
+          <div><span>✦</span><strong>AI Study Partner</strong><small>One smart assistant</small></div>
           <div><span>📸</span><strong>Homework Help</strong><small>Scan and solve</small></div>
           <div><span>🌐</span><strong>Languages</strong><small>Learn your way</small></div>
           <div><span>🏆</span><strong>Exam Coach</strong><small>Plan · Practise · Score</small></div>
@@ -527,25 +506,10 @@ export default function App() {
         onSelectSubject={setSelectedSubject}
         selectedMode={selectedMode}
         onSelectMode={setSelectedMode}
-        selectedTeacherId={selectedTeacherId}
-        onSelectTeacher={(subjectId) => {
-          setSelectedTeacherId(subjectId);
-          setSelectedSubject(subjectId);
-        }}
       />
 
       {/* Main Chat Scrollable Container */}
-      <main id="chat-window" ref={chatWindowRef} className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 max-w-4xl w-full mx-auto space-y-4 scroll-mt-4">
-        {selectedTeacherId && (
-          <div className="ss-active-teacher-banner">
-            <span className="ss-active-teacher-avatar"><img src={`/teacher-avatars/${selectedTeacherId}.svg`} alt="" /></span>
-            <div>
-              <strong>{({ maths: 'Arjun Sir', science: 'Meera Ma’am', english: 'Anaya Ma’am', social: 'Kabir Sir', coding: 'Dev Sir', exam_prep: 'Tara Ma’am' } as Record<string, string>)[selectedTeacherId]}</strong>
-              <small>Private teacher chat · Ask your question below</small>
-            </div>
-            <span className="ss-chat-live">● ONLINE</span>
-          </div>
-        )}
+      <main className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 max-w-4xl w-full mx-auto space-y-4">
         {messages.length === 0 ? (
           <SuggestedQuestions
             subjects={subjects}
@@ -561,8 +525,6 @@ export default function App() {
               <MessageBubble
                 key={msg.id}
                 message={msg}
-                teacherAvatar={selectedTeacherId ? `/teacher-avatars/${selectedTeacherId}.svg` : undefined}
-                teacherName={selectedTeacherId ? ({ maths: 'Arjun Sir', science: 'Meera Ma’am', english: 'Anaya Ma’am', social: 'Kabir Sir', coding: 'Dev Sir', exam_prep: 'Tara Ma’am' } as Record<string, string>)[selectedTeacherId] : undefined}
                 onGenerateQuizFromTopic={handleOpenQuizWithTopic}
               />
             ))}
