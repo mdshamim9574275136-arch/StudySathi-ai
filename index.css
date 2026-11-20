@@ -194,3 +194,9 @@ button:active { transform:scale(.985); }
 
 .ss-brand-mark { background: radial-gradient(circle at 35% 25%, #ffffff, #f0f2ff 75%); box-shadow: 0 7px 18px rgba(83,100,220,.10), inset 0 1px #fff; }
 .ss-brand-orbit { position:absolute; inset:5px; border:1px solid rgba(91,105,230,.25); border-radius:14px; transform:rotate(25deg); }
+
+/* Dashboard AI robot illustration */
+.ss-ai-robot { position: relative; display:flex; align-items:center; justify-content:center; width:min(100%, 250px); aspect-ratio:1; margin:auto; border-radius:50%; background:radial-gradient(circle, #eef2ff 0%, #f8fafc 62%, transparent 70%); }
+.ss-ai-robot svg { width:100%; height:100%; overflow:visible; filter:drop-shadow(0 14px 18px rgba(99,102,241,.16)); }
+.ss-robot-spark { position:absolute; top:12%; right:12%; color:#8b5cf6; font-size:2rem; animation:ss-sparkle 2.2s ease-in-out infinite; }
+@keyframes ss-sparkle { 0%,100% { transform:scale(.8) rotate(0deg); opacity:.55; } 50% { transform:scale(1.18) rotate(18deg); opacity:1; } }

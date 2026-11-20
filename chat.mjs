@@ -4,50 +4,61 @@ const headers = {
 };
 
 export default async (req) => {
-  if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: "Use POST to ask a question." }), { status: 405, headers });
-  }
+  if (req.method !== "POST") return new Response(JSON.stringify({ error: "Use POST to ask a question." }), { status: 405, headers });
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    return new Response(JSON.stringify({ error: "AI setup is not finished yet. Add GEMINI_API_KEY in Netlify → Site configuration → Environment variables, then redeploy." }), { status: 503, headers });
-  }
+  if (!apiKey) return new Response(JSON.stringify({ error: "AI setup is not finished. Add GEMINI_API_KEY in Netlify environment variables and redeploy." }), { status: 503, headers });
+
   try {
     const body = await req.json();
-    const question = String(body.message || body.question || "").trim();
-    if (!question || question.length > 4000) {
-      return new Response(JSON.stringify({ error: "Please enter a question (maximum 4000 characters)." }), { status: 400, headers });
-    }
+    const image = body.image;
+    let question = String(body.message || body.question || "").trim();
+    if (!question && !image) return new Response(JSON.stringify({ error: "Please type a question or attach a photo." }), { status: 400, headers });
+    if (question.length > 4000) return new Response(JSON.stringify({ error: "Please keep your question under 4000 characters." }), { status: 400, headers });
+
     const language = String(body.language || "Auto detect").slice(0, 40);
-    const studentClass = String(body.studentClass || "Not specified").slice(0, 30);
-    const stream = String(body.stream || "Not specified").slice(0, 40);
     const subject = String(body.subject || "General study help").slice(0, 80);
-    const teacher = String(body.teacher || "StudySaathi AI").slice(0, 80);
-    const teacherRole = String(body.teacherRole || "friendly all-subject study companion").slice(0, 180);
-    // AI subject tutors remain available 24/7; each teacher has a separate chat history.
-    const systemInstruction = `You are ${teacher}, a kind, accurate and encouraging AI tutor in StudySaathi AI. Your teaching specialization and style: ${teacherRole}. Help students learn; explain clearly with steps and examples. Student class: ${studentClass}. Stream: ${stream}. Subject: ${subject}. MANDATORY RESPONSE LANGUAGE: ${language}. If the selected language is not Auto detect/auto, write the entire answer only in that language (including headings, examples, and explanations); do not default to English. If language is Auto detect/auto, answer in the language the student used. Keep formulas and standard technical terms when helpful, but explain them in the selected language. For maths/science, show steps and check units. For class 11–12 Commerce, support Accountancy, Business Studies and Economics. For Science, support Physics, Chemistry, Biology and Mathematics. Never pretend to know something you do not know; state uncertainty and correct mistakes. Keep answers age-appropriate. Do not claim to be a human teacher. Format answers in readable plain text.`;
-    const history = Array.isArray(body.history) ? body.history.slice(-8).map((item) => ({
-      role: item?.role === "model" ? "model" : "user",
-      parts: [{ text: String(item?.text || "").slice(0, 4000) }],
-    })).filter((item) => item.parts[0].text) : [];
+    const mode = String(body.mode || "Explain").slice(0, 40);
+    const simpleMode = Boolean(body.simpleMode);
+    const systemInstruction = `You are StudySaathi AI, a careful and friendly educational tutor. Help the student understand rather than merely giving unexplained answers. Subject: ${subject}. Mode: ${mode}. Simple explanation mode: ${simpleMode ? "on" : "off"}. Mandatory response language: ${language}. If language is Auto detect, answer in the language used by the student; otherwise answer fully in the selected language.
+
+IMAGE RULES: If an image is attached, inspect the actual visual content carefully. Read visible text, numbers, diagrams, labels and answer choices. First identify what is visible. Solve only what can be read reliably. If the photo is blurry, cropped, rotated, too dark, or text is unclear, clearly say exactly what cannot be read and ask for a clearer/cropped photo; never invent missing words, numbers or answers. For a worksheet, answer each visible question in order and show understandable steps. For a diagram, describe its parts and explain what it shows. If the user asks a specific question about the image, answer that question using the image. Do not claim to have seen details that are not visible. Keep the response age-appropriate and readable.`;
+
+    const parts = [];
+    if (question) parts.push({ text: question });
+    else parts.push({ text: "Please carefully inspect this uploaded study/homework photo. Read the visible question and solve or explain it step by step. If anything is unclear, tell me instead of guessing." });
+
+    if (image) {
+      let mimeType = String(image.mimeType || "image/jpeg").toLowerCase();
+      let raw = String(image.data || "");
+      if (raw.startsWith("data:")) {
+        const match = raw.match(/^data:([^;]+);base64,(.+)$/s);
+        if (!match) return new Response(JSON.stringify({ error: "The photo format could not be read. Please upload it again as JPG or PNG." }), { status: 400, headers });
+        mimeType = match[1].toLowerCase(); raw = match[2];
+      }
+      if (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(mimeType)) return new Response(JSON.stringify({ error: "Please upload a JPG, PNG or WEBP photo." }), { status: 400, headers });
+      if (!raw || raw.length > 5_000_000) return new Response(JSON.stringify({ error: "This photo is too large to process. Please crop or compress it and try again." }), { status: 413, headers });
+      parts.push({ inlineData: { mimeType, data: raw } });
+    }
+
     const upstream = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${encodeURIComponent(apiKey)}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: systemInstruction }] },
-        contents: [...history, { role: "user", parts: [{ text: question }] }],
-        generationConfig: { temperature: 0.5, maxOutputTokens: 1200 },
+        contents: [{ role: "user", parts }],
+        generationConfig: { temperature: 0.25, maxOutputTokens: 1800 },
       }),
     });
     const data = await upstream.json();
     if (!upstream.ok) {
-      console.error("Gemini API error", upstream.status, JSON.stringify(data).slice(0, 1200));
-      return new Response(JSON.stringify({ error: upstream.status === 429 ? "AI is busy or the free quota was reached. Please try again shortly." : "AI service could not answer right now. Check the Gemini API key and try again." }), { status: 502, headers });
+      console.error("Gemini API error", upstream.status, JSON.stringify(data).slice(0, 1000));
+      const msg = upstream.status === 429 ? "AI photo/question limit reached for now. Please wait a little and try again." : "AI could not process this request. Please try a clearer photo or check the Gemini API key.";
+      return new Response(JSON.stringify({ error: msg }), { status: 502, headers });
     }
     const answer = (data.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("\n").trim();
-    if (!answer) return new Response(JSON.stringify({ error: "AI returned an empty answer. Please try asking another way." }), { status: 502, headers });
+    if (!answer) return new Response(JSON.stringify({ error: "AI could not read enough from this photo. Please upload a clearer, closer image." }), { status: 502, headers });
     return new Response(JSON.stringify({ reply: answer, timestamp: new Date().toISOString() }), { status: 200, headers });
   } catch (err) {
     console.error("Chat function error", err);
-    return new Response(JSON.stringify({ error: "Could not connect to the AI service. Please check your internet and try again." }), { status: 500, headers });
+    return new Response(JSON.stringify({ error: "Could not connect to StudySaathi AI. Please check your internet and try again." }), { status: 500, headers });
   }
 };
