@@ -203,3 +203,57 @@ button:active { transform:scale(.98); }
  .ss-shortcuts {grid-template-columns:repeat(2,minmax(0,1fr))}
  .ss-shortcuts > div:last-child {grid-column:span 2}
 }
+
+/* StudySaathi AI - Chat Readability Fix */
+
+.prose-educational,
+.prose-educational p,
+.prose-educational li,
+.prose-educational span,
+.prose-educational div {
+  color: #edf5ff !important;
+}
+
+.prose-educational h1,
+.prose-educational h2,
+.prose-educational h3,
+.prose-educational h4,
+.prose-educational strong,
+.prose-educational b {
+  color: #ffffff !important;
+}
+
+.prose-educational a {
+  color: #7dd3fc !important;
+}
+
+.prose-educational blockquote {
+  color: #e2e8f0 !important;
+  background: #17345d !important;
+  border-left-color: #38bdf8 !important;
+}
+
+.prose-educational code {
+  color: #c4b5fd !important;
+  background: #263b63 !important;
+}
+
+.prose-educational pre {
+  color: #f8fafc !important;
+  background: #071326 !important;
+}
+
+.prose-educational pre code {
+  color: inherit !important;
+}
+
+.prose-educational th {
+  color: #ffffff !important;
+  background: #1e3a66 !important;
+}
+
+.prose-educational td {
+  color: #edf5ff !important;
+  border-color: rgba(148, 190, 235, .35) !important;
+}
+
