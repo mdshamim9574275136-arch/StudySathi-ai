@@ -237,41 +237,53 @@ export default function App() {
     }
   }, [input]);
 
-  // Homework Photo File Handler
-  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Homework Photo File Handler: resize/compress before upload so Netlify
+  // receives a small, reliable payload on both mobile data and desktop.
+  const handlePhotoSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    // Reset input so same file can be re-selected if needed
     e.target.value = '';
     setIsPhotoMenuOpen(false);
     setError(null);
 
-    // Validate type
     if (!file.type.startsWith('image/')) {
-      setError('Please select a valid image file (JPG, PNG, WEBP).');
+      setError('Please select a JPG, PNG or WEBP image.');
+      return;
+    }
+    if (file.size > 12 * 1024 * 1024) {
+      setError('Photo is too large (maximum 12 MB). Please choose a smaller image.');
       return;
     }
 
-    // Validate size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setError(`Image size (${(file.size / (1024 * 1024)).toFixed(1)}MB) exceeds the 5MB limit. Please crop or choose a smaller photo.`);
-      return;
-    }
+    try {
+      const bitmap = await createImageBitmap(file);
+      const maxSide = 1600;
+      const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      const ctx = canvas.getContext('2d');
+      if (!ctx) throw new Error('Could not prepare this photo.');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      bitmap.close();
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const resultStr = reader.result as string;
-      setAttachedImage({
-        data: resultStr,
-        mimeType: file.type,
-        name: file.name,
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (!blob) return reject(new Error('Could not compress this photo.'));
+          if (blob.size > 1.8 * 1024 * 1024) return reject(new Error('Photo is still too large. Please crop it and try again.'));
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result || ''));
+          reader.onerror = () => reject(new Error('Could not read this photo.'));
+          reader.readAsDataURL(blob);
+        }, 'image/jpeg', 0.82);
       });
-    };
-    reader.onerror = () => {
-      setError('Failed to read image file. Please try again.');
-    };
-    reader.readAsDataURL(file);
+
+      setAttachedImage({ data: dataUrl, mimeType: 'image/jpeg', name: file.name });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to prepare photo. Please try another image.');
+    }
   };
 
   // Speech to Text support
@@ -374,7 +386,7 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: textToSend,
+          message: textToSend || (imageToSend ? 'Please read this uploaded homework photo and give the direct answers to all clearly visible questions, in order.' : ''),
           image: imageToSend || undefined,
           history: historyPayload,
           subject: selectedSubject,
@@ -484,7 +496,7 @@ export default function App() {
           </div>
           <div className="ss-hero-art" aria-hidden="true">
             <div className="ss-orbit ss-orbit-one" /><div className="ss-orbit ss-orbit-two" />
-            <div className="ss-student-emoji">🧑🏻‍💻</div>
+            <div className="ss-student-emoji" aria-label="StudySaathi AI robot">🤖</div>
             <div className="ss-floating-note">Dream · Learn · Achieve</div>
             <div className="ss-books"><i /><i /><i /></div>
           </div>
