@@ -244,3 +244,65 @@ button, input, textarea, select { max-width:100%; }
   main { width:100%; }
   .ss-hero-card { max-width:1200px; margin-left:auto; margin-right:auto; }
 }
+
+
+/* StudySaathi final mobile/desktop layout + animated robot */
+.ss-app-shell {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+.ss-app-shell > header,
+.ss-app-shell > .ss-dashboard-hero,
+.ss-app-shell > .ss-subject-panel,
+.ss-app-shell > footer {
+  flex: 0 0 auto;
+}
+.ss-chat-main {
+  min-height: 0 !important;
+  flex: 1 1 auto !important;
+  width: 100%;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+}
+.ss-chat-footer {
+  position: relative;
+  bottom: auto;
+  padding-bottom: max(9px, env(safe-area-inset-bottom));
+}
+.ss-student-emoji.ss-robot-motion {
+  transform-origin: 50% 65%;
+  animation: ss-robot-float 3.2s ease-in-out infinite;
+  filter: drop-shadow(0 10px 15px rgba(92, 82, 220, .20));
+  will-change: transform;
+}
+.ss-hero-art .ss-orbit-one { animation: ss-orbit-turn 12s linear infinite; }
+.ss-hero-art .ss-orbit-two { animation: ss-orbit-turn 17s linear infinite reverse; }
+.ss-hero-art .ss-floating-note { animation: ss-note-bob 2.8s ease-in-out infinite; }
+@keyframes ss-robot-float {
+  0%, 100% { transform: translateY(0) rotate(-3deg) scale(1); }
+  50% { transform: translateY(-11px) rotate(3deg) scale(1.035); }
+}
+@keyframes ss-orbit-turn { to { transform: rotate(385deg); } }
+@keyframes ss-note-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@media (max-width: 700px) {
+  .ss-app-shell { height: 100dvh; min-height: 0; }
+  .ss-dashboard-hero { padding-top: 8px !important; padding-bottom: 6px !important; }
+  .ss-hero-card { min-height: 168px !important; }
+  .ss-subject-panel { padding-top: 8px !important; padding-bottom: 8px !important; }
+  .ss-chat-main { padding-top: 10px !important; padding-bottom: 12px !important; }
+  .ss-chat-footer { padding-top: 8px !important; }
+  .ss-chat-footer textarea { min-height: 44px; max-height: 112px; }
+}
+@media (min-width: 701px) {
+  .ss-app-shell { height: 100vh; }
+  .ss-dashboard-hero { flex: 0 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ss-robot-motion, .ss-hero-art .ss-orbit-one, .ss-hero-art .ss-orbit-two,
+  .ss-hero-art .ss-floating-note { animation: none !important; }
+}

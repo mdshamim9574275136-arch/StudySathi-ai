@@ -447,7 +447,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-slate-50 text-slate-900 font-sans">
+    <div className="ss-app-shell flex flex-col h-screen bg-slate-50 text-slate-900 font-sans">
       {/* Hidden File Inputs for Device Camera and Gallery */}
       <input
         ref={cameraInputRef}
@@ -496,7 +496,7 @@ export default function App() {
           </div>
           <div className="ss-hero-art" aria-hidden="true">
             <div className="ss-orbit ss-orbit-one" /><div className="ss-orbit ss-orbit-two" />
-            <div className="ss-student-emoji" aria-label="StudySaathi AI robot">🤖</div>
+            <div className="ss-student-emoji ss-robot-motion" role="img" aria-label="Animated StudySaathi AI robot">🤖</div>
             <div className="ss-floating-note">Dream · Learn · Achieve</div>
             <div className="ss-books"><i /><i /><i /></div>
           </div>
@@ -521,7 +521,7 @@ export default function App() {
       />
 
       {/* Main Chat Scrollable Container */}
-      <main className="flex-1 overflow-y-auto px-3 sm:px-4 py-4 max-w-4xl w-full mx-auto space-y-4">
+      <main className="ss-chat-main flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 sm:px-4 py-4 max-w-4xl w-full mx-auto space-y-4">
         {messages.length === 0 ? (
           <SuggestedQuestions
             subjects={subjects}
@@ -596,7 +596,7 @@ export default function App() {
       </main>
 
       {/* Floating Bottom Input Area (Pinned) */}
-      <footer className="sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-indigo-100/90 px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg">
+      <footer className="ss-chat-footer shrink-0 sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-indigo-100/90 px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg">
         <div className="max-w-4xl mx-auto space-y-2">
           {/* Homework Photo Attachment Preview Card */}
           {attachedImage && (
