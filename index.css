@@ -196,69 +196,51 @@ button:active { transform:scale(.985); }
 .ss-brand-orbit { position:absolute; inset:5px; border:1px solid rgba(91,105,230,.25); border-radius:14px; transform:rotate(25deg); }
 
 
-/* Responsive layout pass: phones, tablets and desktop. CSS-only; no extra functions or API calls. */
-html, body, #root { width:100%; min-width:320px; min-height:100%; }
-body { overflow-x:hidden; -webkit-text-size-adjust:100%; }
-#root > div { min-height:100dvh; height:100dvh; overflow:hidden; }
-header { width:100%; }
-.ss-dashboard-hero { max-width:1240px; }
-main { max-width:1100px !important; width:100%; min-width:0; overscroll-behavior:contain; scrollbar-gutter:stable; }
-footer { width:100%; padding-bottom:max(.65rem, env(safe-area-inset-bottom)); }
-footer > div { max-width:1100px !important; width:100%; }
-main img { max-width:100%; height:auto; object-fit:contain; }
-main pre, main table { max-width:100%; }
-main pre { overflow-x:auto; }
-main .prose-educational { overflow-wrap:anywhere; word-break:normal; }
+/* Combined mobile + desktop responsive corrections */
+:root { color-scheme: light; }
+html, body, #root { width:100%; min-height:100%; margin:0; }
+html, body { overflow-x:hidden; }
+body { min-width:320px; background:#f8fafc; color:#172033; }
+#root { min-height:100dvh; }
+*, *::before, *::after { box-sizing:border-box; }
+img, video, canvas, svg { max-width:100%; }
+button, input, textarea, select { max-width:100%; }
+.prose-educational { overflow-wrap:anywhere; word-break:normal; color:#253047; line-height:1.7; }
+.prose-educational p, .prose-educational li { color:inherit; }
 
-@media (min-width:1024px) {
-  .ss-dashboard-hero { padding-left:24px; padding-right:24px; }
-  .ss-hero-card { min-height:230px; padding:30px 36px 38px; }
-  .ss-hero-art { flex-basis:230px; height:180px; }
-  .ss-shortcuts { grid-template-columns:repeat(5,minmax(0,1fr)); }
-  main { padding-left:24px !important; padding-right:24px !important; }
-  footer { padding-left:24px; padding-right:24px; }
+@media (max-width: 700px) {
+  html, body, #root { width:100%; overflow-x:hidden; }
+  #root > div { width:100%; min-width:0; min-height:100dvh; height:100dvh; }
+  header { width:100%; max-width:100vw; padding-top:env(safe-area-inset-top); }
+  header > div { min-width:0; gap:6px; padding-left:10px; padding-right:10px; }
+  header h1, header .brand-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  main, footer, section, article { min-width:0; max-width:100%; }
+  main { width:100%; overflow-x:hidden; }
+  main > div, main section { max-width:100%; }
+  .ss-hero-card { width:100%; min-height:190px; padding:18px 14px 32px; gap:8px; }
+  .ss-hero-copy { min-width:0; max-width:68%; }
+  .ss-hero-copy h1 { font-size:clamp(23px,7vw,32px); overflow-wrap:anywhere; }
+  .ss-hero-copy p { font-size:12px; }
+  .ss-hero-art { flex:0 1 32%; min-width:82px; max-width:120px; }
+  .ss-shortcuts { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+  .ss-shortcuts > div, .ss-shortcuts > div:last-child { grid-column:auto; min-width:0; padding:9px 7px; }
+  .ss-shortcuts strong, .ss-shortcuts small { white-space:normal; overflow-wrap:anywhere; }
+  /* Keep subject and mode chips scrollable without widening the page */
+  .ss-subject-panel, .ss-subject-panel > div { max-width:100%; min-width:0; }
+  .ss-subject-panel .overflow-x-auto { max-width:100%; overscroll-behavior-x:contain; }
+  /* Chat bubbles and uploaded images stay inside the phone viewport */
+  .prose-educational { font-size:14px; }
+  [class*="max-w-3xl"], [class*="max-w-4xl"], [class*="max-w-5xl"], [class*="max-w-6xl"] { max-width:100%; }
+  img { height:auto; }
+  textarea { font-size:16px !important; line-height:1.45; max-height:120px; }
+  input, select { font-size:16px !important; }
+  footer { width:100%; max-width:100vw; padding-bottom:calc(8px + env(safe-area-inset-bottom)); }
+  footer > div { min-width:0; max-width:100%; }
+  .fixed { max-width:100vw; }
 }
-@media (min-width:641px) and (max-width:1023px) {
-  .ss-dashboard-hero { padding-left:16px; padding-right:16px; }
-  .ss-hero-card { min-height:205px; padding:22px 22px 34px; }
-  .ss-hero-art { flex-basis:155px; }
-  .ss-shortcuts { grid-template-columns:repeat(3,minmax(0,1fr)); }
-  main { padding-left:16px !important; padding-right:16px !important; }
-  footer { padding-left:16px; padding-right:16px; }
-}
-@media (max-width:640px) {
-  #root > div { height:100dvh; min-height:100dvh; }
-  header > div { padding-left:10px !important; padding-right:10px !important; gap:6px !important; }
-  header button, header select { max-width:100%; }
-  .ss-dashboard-hero { padding:10px 10px 8px !important; }
-  .ss-hero-card { display:flex; align-items:center; min-height:180px; padding:16px 12px 30px !important; gap:4px; border-radius:18px; }
-  .ss-hero-copy { min-width:0; flex:1 1 auto; }
-  .ss-hero-copy h1 { font-size:clamp(25px,7vw,34px); line-height:1.08; }
-  .ss-hero-copy p { font-size:13px; line-height:1.5; }
-  .ss-hero-art { flex:0 0 88px !important; width:88px; height:112px !important; }
-  .ss-student-emoji { width:68px !important; height:68px !important; font-size:36px !important; border-radius:21px; }
-  .ss-floating-note { display:none; }
-  .ss-books { transform:scale(.58) rotate(-5deg); transform-origin:left bottom; }
-  .ss-hero-foot { left:12px !important; bottom:9px; font-size:7px; letter-spacing:.08em; }
-  .ss-feature-pills { gap:5px; }
-  .ss-feature-pills span { font-size:9px; padding:5px 7px; }
-  .ss-shortcuts { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:7px; }
-  .ss-shortcuts > div { padding:9px; grid-template-columns:30px minmax(0,1fr); column-gap:7px; }
-  .ss-shortcuts span { width:30px; height:30px; font-size:15px; }
-  .ss-shortcuts strong { font-size:11px; }
-  .ss-shortcuts small { font-size:9px; }
-  .ss-subject-panel { border-radius:15px; padding:10px !important; }
-  .ss-subject-chip { font-size:11px; padding:8px 9px; }
-  .ss-mode-row { flex-direction:row; align-items:center; gap:6px; overflow-x:auto; flex-wrap:nowrap; }
-  main { width:100% !important; max-width:none !important; padding:10px 10px 14px !important; gap:12px !important; }
-  main > * { min-width:0; max-width:100%; }
-  main .prose-educational, main .prose-educational p, main .prose-educational li { font-size:14px !important; line-height:1.65 !important; }
-  main [class*="max-w-[85%]"] { max-width:92% !important; }
-  footer { padding:8px 10px max(8px, env(safe-area-inset-bottom)) !important; }
-  footer > div { gap:6px !important; }
-  footer textarea, footer input { font-size:16px !important; }
-  footer button { touch-action:manipulation; }
-}
-@media (prefers-reduced-motion:reduce) {
-  *, *::before, *::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+
+@media (min-width: 701px) {
+  #root > div { min-height:100vh; }
+  main { width:100%; }
+  .ss-hero-card { max-width:1200px; margin-left:auto; margin-right:auto; }
 }

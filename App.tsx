@@ -345,7 +345,7 @@ export default function App() {
       textareaRef.current.style.height = 'auto';
     }
 
-    const displayText = textToSend || '📷 Homework photo attached — please read and answer the questions in this image.';
+    const displayText = textToSend || '📷 Photo attached — reading the visible questions now.';
 
     const userMessage: Message = {
       id: `user-${Date.now()}`,
@@ -370,7 +370,7 @@ export default function App() {
         text: m.text,
       }));
 
-      const res = await fetch('/.netlify/functions/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
