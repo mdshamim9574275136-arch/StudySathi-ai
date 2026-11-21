@@ -447,7 +447,7 @@ export default function App() {
   };
 
   return (
-    <div className="ss-app-shell flex flex-col h-screen bg-slate-50 text-slate-900 font-sans">
+    <div className="ss-app-shell flex flex-col min-h-screen bg-slate-50 text-slate-900 font-sans">
       {/* Hidden File Inputs for Device Camera and Gallery */}
       <input
         ref={cameraInputRef}
@@ -496,14 +496,27 @@ export default function App() {
           </div>
           <div className="ss-hero-art" aria-hidden="true">
             <div className="ss-orbit ss-orbit-one" /><div className="ss-orbit ss-orbit-two" />
-            <div className="ss-student-emoji ss-robot-motion" role="img" aria-label="Animated StudySaathi AI robot">🤖</div>
+            <div className="ss-robot" role="img" aria-label="Animated StudySaathi AI robot">
+              <svg viewBox="0 0 160 150" className="ss-robot-svg" aria-hidden="true">
+                <path d="M80 17v13" stroke="#6675e8" strokeWidth="5" strokeLinecap="round"/>
+                <circle cx="80" cy="12" r="6" fill="#8b5cf6" className="ss-robot-antenna"/>
+                <rect x="31" y="32" width="98" height="83" rx="27" fill="url(#ssRobotBody)" stroke="#aeb9ff" strokeWidth="3"/>
+                <rect x="43" y="46" width="74" height="54" rx="17" fill="#172554"/>
+                <g className="ss-robot-eyes"><ellipse cx="64" cy="72" rx="7" ry="10" fill="#6ff5ed"/><ellipse cx="96" cy="72" rx="7" ry="10" fill="#6ff5ed"/></g>
+                <path d="M68 88q12 8 24 0" fill="none" stroke="#9ca8ff" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M31 61 17 71v25l15 4M129 61l14 10v25l-15 4" fill="none" stroke="#8b5cf6" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M56 117v13m48-13v13" stroke="#6675e8" strokeWidth="9" strokeLinecap="round"/>
+                <defs><linearGradient id="ssRobotBody" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#fff"/><stop offset="1" stopColor="#dfe5ff"/></linearGradient></defs>
+              </svg>
+              <span className="ss-robot-glow" />
+            </div>
             <div className="ss-floating-note">Dream · Learn · Achieve</div>
             <div className="ss-books"><i /><i /><i /></div>
           </div>
           <div className="ss-hero-foot">SMART LEARNING <b>•</b> AI POWERED <b>•</b> FOR EVERY STUDENT</div>
         </div>
         <div className="ss-shortcuts">
-          <div><span>💬</span><strong>AI Chat</strong><small>Ask anything, anytime</small></div>
+          <button type="button" className="ss-shortcut-button" onClick={() => { textareaRef.current?.focus(); document.getElementById('ss-chat-input')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }}><span>💬</span><strong>AI Chat</strong><small>Ask anything, anytime</small></button>
           <div><span>✦</span><strong>AI Study Partner</strong><small>One smart assistant</small></div>
           <div><span>📸</span><strong>Homework Help</strong><small>Scan and solve</small></div>
           <div><span>🌐</span><strong>Languages</strong><small>Learn your way</small></div>
@@ -521,7 +534,7 @@ export default function App() {
       />
 
       {/* Main Chat Scrollable Container */}
-      <main className="ss-chat-main flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 sm:px-4 py-4 max-w-4xl w-full mx-auto space-y-4">
+      <main className="ss-main-chat flex-1 px-3 sm:px-4 py-4 max-w-4xl w-full mx-auto space-y-4">
         {messages.length === 0 ? (
           <SuggestedQuestions
             subjects={subjects}
@@ -596,7 +609,7 @@ export default function App() {
       </main>
 
       {/* Floating Bottom Input Area (Pinned) */}
-      <footer className="ss-chat-footer shrink-0 sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-indigo-100/90 px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg">
+      <footer id="ss-chat-input" className="sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-indigo-100/90 px-3 sm:px-4 py-2.5 sm:py-3 shadow-lg">
         <div className="max-w-4xl mx-auto space-y-2">
           {/* Homework Photo Attachment Preview Card */}
           {attachedImage && (
