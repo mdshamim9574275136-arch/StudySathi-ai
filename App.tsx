@@ -345,7 +345,7 @@ export default function App() {
       textareaRef.current.style.height = 'auto';
     }
 
-    const displayText = textToSend || '📸 Solved from uploaded homework photo';
+    const displayText = textToSend || '📷 Homework photo attached — please read and answer the questions in this image.';
 
     const userMessage: Message = {
       id: `user-${Date.now()}`,
@@ -370,7 +370,7 @@ export default function App() {
         text: m.text,
       }));
 
-      const res = await fetch('/api/chat', {
+      const res = await fetch('/.netlify/functions/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -484,24 +484,7 @@ export default function App() {
           </div>
           <div className="ss-hero-art" aria-hidden="true">
             <div className="ss-orbit ss-orbit-one" /><div className="ss-orbit ss-orbit-two" />
-            <div className="ss-student-emoji ss-ai-robot" role="img" aria-label="StudySaathi AI robot assistant">
-              <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="botShell" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#dbeafe"/><stop offset="1" stopColor="#c4b5fd"/></linearGradient>
-                  <linearGradient id="botFace" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#263b70"/><stop offset="1" stopColor="#111827"/></linearGradient>
-                </defs>
-                <ellipse cx="110" cy="194" rx="64" ry="10" fill="#94a3b8" opacity=".2"/>
-                <path d="M110 24v17" stroke="#64748b" strokeWidth="7" strokeLinecap="round"/><circle cx="110" cy="18" r="10" fill="#8b5cf6"/><circle cx="110" cy="18" r="4" fill="white"/>
-                <rect x="40" y="48" width="140" height="112" rx="42" fill="url(#botShell)" stroke="#a5b4fc" strokeWidth="4"/>
-                <rect x="53" y="65" width="114" height="77" rx="29" fill="url(#botFace)"/>
-                <ellipse cx="83" cy="102" rx="10" ry="13" fill="#67e8f9"/><ellipse cx="137" cy="102" rx="10" ry="13" fill="#67e8f9"/>
-                <path d="M91 123q19 13 38 0" fill="none" stroke="#c4b5fd" strokeWidth="5" strokeLinecap="round"/>
-                <path d="M40 94H23q-9 0-9 10v17q0 9 9 9h18M180 94h17q9 0 9 10v17q0 9-9 9h-18" fill="none" stroke="#a5b4fc" strokeWidth="9" strokeLinecap="round"/>
-                <rect x="73" y="160" width="74" height="35" rx="17" fill="#8b5cf6"/><path d="M91 177h38" stroke="white" strokeWidth="5" strokeLinecap="round"/>
-                <path d="M60 52q-7-12-2-21M160 52q7-12 2-21" stroke="#c4b5fd" strokeWidth="4" strokeLinecap="round"/>
-              </svg>
-              <span className="ss-robot-spark">✦</span>
-            </div>
+            <div className="ss-student-emoji">🧑🏻‍💻</div>
             <div className="ss-floating-note">Dream · Learn · Achieve</div>
             <div className="ss-books"><i /><i /><i /></div>
           </div>
